@@ -1,0 +1,30 @@
+{
+  "name": "eventhorizonbridge",
+  "version": "0.0.1",
+  "description": " The API part of the Event Horizon app.",
+  "scripts": {
+    "build": "npx tsc",
+    "expose": "node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oiimrosabel/EventHorizonBridge.git"
+  },
+  "author": "Rosabel",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/oiimrosabel/EventHorizonBridge/issues"
+  },
+  "homepage": "https://github.com/oiimrosabel/EventHorizonBridge#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "luxon": "^3.5.0",
+    "tokenizr": "^1.7.0",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^22.10.6"
+  }
+}
