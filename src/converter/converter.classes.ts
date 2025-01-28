@@ -1,8 +1,7 @@
 import {DateTime} from 'luxon'
-import {RTitle} from "./converter.common"
+import {formatDate, formatTime, RTitle} from "./converter.common"
 
 const TIMEZONE_CODE = "Europe/Paris"
-const ZERO = "0"
 const DEFAULT_ISO = "2000-01-01T00:00Z"
 
 const cleanString = (str: string) => str.trim().replaceAll("\\", "")
@@ -16,30 +15,12 @@ export class CDateTime {
         this.date = this.convertToDate(this.iso)
     }
 
-    public static format(date: Date) {
-        return [
-            date.getFullYear()
-                .toString().padStart(4, ZERO),
-            (date.getMonth() + 1)
-                .toString().padStart(2, ZERO),
-            date.getDate()
-                .toString().padStart(2, ZERO),
-            ((date.getDay() - 1) % 7)
-                .toString()
-        ].join('')
-    }
-
     public toDateString() {
-        return CDateTime.format(this.date)
+        return formatDate(this.date)
     }
 
     public toTimeString() {
-        return [
-            this.date.getHours()
-                .toString().padStart(2, ZERO),
-            this.date.getMinutes()
-                .toString().padStart(2, ZERO)
-        ].join('')
+        return formatTime(this.date)
     }
 
     private convertToISO(m: RegExpExecArray) {

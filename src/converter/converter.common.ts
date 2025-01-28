@@ -40,3 +40,19 @@ export interface RCalendar {
     d: RDay[]
     u: RLog
 }
+
+const ZERO = "0"
+
+export const formatDate = (date: Date) =>
+    [
+        date.getFullYear().toString().padStart(4, ZERO),
+        (date.getMonth() + 1).toString().padStart(2, ZERO),
+        date.getDate().toString().padStart(2, ZERO),
+        (Math.abs((date.getDay() - 1) % 7)).toString()
+    ].join('')
+
+export const formatTime = (date: Date) =>
+    [
+        date.getHours().toString().padStart(2, ZERO),
+        date.getMinutes().toString().padStart(2, ZERO)
+    ].join('')

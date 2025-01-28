@@ -4,7 +4,8 @@
   "description": " The API part of the Event Horizon app.",
   "scripts": {
     "build": "npx tsc",
-    "expose": "node dist/server.js"
+    "deploy": "node dist/server.js",
+    "dev": "npm run build && npm run deploy"
   },
   "repository": {
     "type": "git",
@@ -17,12 +18,14 @@
   },
   "homepage": "https://github.com/oiimrosabel/EventHorizonBridge#readme",
   "dependencies": {
+    "connect-timeout": "^1.9.0",
     "express": "^4.21.2",
     "luxon": "^3.5.0",
     "tokenizr": "^1.7.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@types/connect-timeout": "^0.0.39",
     "@types/express": "^5.0.0",
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.10.6"

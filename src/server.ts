@@ -1,62 +1,69 @@
 import express from "express"
-import {checkData, Fetcher, getError, getSuccess} from "./fetch/fetch.main"
+import {checkData, Fetcher, getErrorResponseData, getSuccessResponseData} from "./fetch/fetch.main"
 import {iCalParser} from "./converter/converter.parser"
+import AdeConfig from "../ade.config.json"
 
-const DEFAULT_PORT = 3000
-const DEFAULT_TIMEOUT = 10
+const DEFAULT_PORT = AdeConfig.port
+const DEFAULT_TIMEOUT = AdeConfig.timeOut
+const DEFAULT_ENDPOINT = AdeConfig.defaultEndpoint
 
 const app = express()
 
 app.use(express.json())
 
+app.use((_, res, next) => {
+    res.header("Access-Control-Allow-Headers", "Content-Type")
+    res.header("Access-Control-Allow-Origin", "*");
+    next()
+})
+
 app.use((req, res, next) => {
-        req.setTimeout(DEFAULT_TIMEOUT * 1000, () => {
-            res.status(500)
-                .send({
-                    type: "error",
-                    message: "Le serveur a mis trop de temps à répondre",
-                    data: {}
-                })
-                .end()
-        })
-        next()
-    }
-)
-
-app.get('/', (_req, res) => {
-    res.write('awa')
-    res.end()
+    res.setTimeout(DEFAULT_TIMEOUT * 1000, () => {
+        req.timedout = true
+        res.status(503)
+            .send(getErrorResponseData("Le serveur a mis trop de temps à répondre."))
+            .end()
+        return
+    })
+    next()
 })
 
-app.get('/api', (_req, res) => {
-    res.status(400)
-    res.end()
+app.get(DEFAULT_ENDPOINT, (_, res, next) => {
+    res.status(405).end()
+    next()
 })
 
-app.post('/api', async (req, res) => {
+app.post(DEFAULT_ENDPOINT, async (req, res, next) => {
     if (!checkData(req.body)) {
         res.status(400)
-            .send(getError("Paramètres manquants ou incorrects."))
+            .send(getErrorResponseData("Paramètres manquants ou incorrects."))
             .end()
+        next()
         return
     }
     const iCalData = await new Fetcher(req.body).fetch()
     if (!iCalData) {
-        res.status(500)
-            .send(getError("Impossible de récupérer le calendrier."))
-            .end()
+        if (!req.timedout)
+            res.status(500)
+                .send(getErrorResponseData("Impossible de récupérer le calendrier."))
+                .end()
+        next()
         return
     }
     const convertedData = new iCalParser(req.body).parseCal(iCalData)
     if (!convertedData) {
-        res.status(500)
-            .send(getError("Impossible de parser le calendrier."))
-            .end()
+        if (!req.timedout)
+            res.status(500)
+                .send(getErrorResponseData("Impossible de parser le calendrier."))
+                .end()
+        next()
         return
     }
-    res.status(200)
-        .send(getSuccess(convertedData))
-        .end()
+    if (!req.timedout)
+        res.status(200)
+            .send(getSuccessResponseData(convertedData))
+            .end()
+    next()
 })
 
 app.listen(DEFAULT_PORT)

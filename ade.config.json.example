@@ -1,0 +1,6 @@
+{
+  "adeUrl": "",
+  "timeOut": 0,
+  "port": 3000,
+  "defaultEndpoint": "/"
+}

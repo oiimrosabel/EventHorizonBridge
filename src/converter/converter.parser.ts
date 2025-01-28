@@ -1,5 +1,5 @@
 import type Tokenizr from "tokenizr"
-import {iCalTokens as T, RCalendar, RDay, REvent} from "./converter.common"
+import {formatDate, formatTime, iCalTokens as T, RCalendar, RDay, REvent} from "./converter.common"
 import {iCalLexer} from "./converter.lexer"
 import {CDateTime, CLocation, CTeachers, CTitle} from "./converter.classes"
 import {RequestData} from "../fetch/fetch.commons"
@@ -30,7 +30,7 @@ export class iCalParser {
         const dayIndex = new Date(this.now)
         for (let _day = 0; _day < this.weeks * 7; _day += 1) {
             if (dayIndex.getDay() !== 0) {
-                const dayEDate = CDateTime.format(dayIndex)
+                const dayEDate = formatDate(dayIndex)
                 calMap.set(dayEDate, {
                     d: dayEDate,
                     dr: 0,
@@ -65,7 +65,7 @@ export class iCalParser {
 
         return {
             u: {
-                dt: CDateTime.format(this.now),
+                dt: `${formatDate(this.now)}${formatTime(this.now)}`,
                 w: this.weeks,
             },
             d: calList.sort((d1, d2) => compAsInt(d1.d, d2.d))

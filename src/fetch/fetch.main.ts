@@ -1,16 +1,15 @@
 import {RequestData, ResponseData} from "./fetch.commons"
 import {RCalendar} from "../converter/converter.common"
+import AdeConfig from "../../ade.config.json"
 
-const BASE_URL = "https://adecampus.univ-rouen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp"
-
-export const getError = (message: string) => (
+export const getErrorResponseData = (message: string) => (
     {
         success: false,
         message: message,
         data: undefined
     }) as ResponseData
 
-export const getSuccess = (data: RCalendar) => (
+export const getSuccessResponseData = (data: RCalendar) => (
     {
         success: true,
         message: undefined,
@@ -49,7 +48,7 @@ export class Fetcher {
     }
 
     private setupUrl() {
-        const baseUrl = new URL(BASE_URL)
+        const baseUrl = new URL(AdeConfig.adeUrl)
         baseUrl.searchParams.append("projectId", "0")
         baseUrl.searchParams.append("calType", "ical")
         baseUrl.searchParams.append("displayConfigId", "8")
