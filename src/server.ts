@@ -28,12 +28,12 @@ app.use((req, res, next) => {
     next()
 })
 
-app.get(DEFAULT_ENDPOINT, (_, res, next) => {
+app.post(DEFAULT_ENDPOINT, (_, res, next) => {
     res.status(405).end()
     next()
 })
 
-app.post(DEFAULT_ENDPOINT, async (req, res, next) => {
+app.get(DEFAULT_ENDPOINT, async (req, res, next) => {
     if (!checkData(req.body)) {
         res.status(400)
             .send(getErrorResponseData("Paramètres manquants ou incorrects."))
